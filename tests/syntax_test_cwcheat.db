@@ -1,17 +1,19 @@
 SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
 see https://datacrystal.romhacking.net/wiki/CwCheat
 
-_S ULUS-10551 #Specify the serial number of a game. cwCheat on PSP uses this to know which cheats you have installed apply to the game you're running.
-_G YS Seven US #Specify the name of the game. This is for us humans, cwCheat doesn't use it.
-_C0 / _C1 #Specify the start of a cheat micro-program. C0 is disable on game load, C1 is enabled on game load.
-_L 0xXXXXXXXX 0xXXXXXXXX #This is how you write a line of cheats. If you leave off the _L at the beginning, the line will become a comment, ignored by cwCheat. 
-
-_S ULUS-99999
-_G General states
-_C0 Disabled cheat
+_S Game ID that is used to match the section
+_G User-friendly game name
+_C0 Disabled cheat title
 _L 0x00000000 0x00000000
-_C1 Enabled cheat
+_C1 Enabled cheat title
 _L 0x00000001 0x00000000
+_C2 Invalid cheat state
+_C1 There should be at least one opcode inside
+everything else is a comment
+_s register shouldn't matter
+_g for any
+_c0 command
+
 
 _S ULUS-00000
 _G Constant Write, 8 bit
@@ -289,3 +291,172 @@ _L 0x90000000 0x00000000
 _L 0xA0000000 0x00000000
 _L 0xB0000000 0x00000000
 _L 0xC0000000 0x00000000
+
+_S ULUS-0000D
+_G Conditionals
+_C0 EQUAL: Execute the next code if the byte at address AAAAAAA equals FF (otherwise, it is skipped) 
+_L 0xDAAAAAAA 0x200000FF
+_C1 Error
+_L 0xDAAAAAAA 0x20000FFF
+_L 0xDAAAAAAA 0x210000FF
+_L 0xDAAAAAAA 0x200100FF
+_C0 NOT EQUAL: Execute the next code if the byte at address AAAAAAA does not equal FF (otherwise, it is skipped)
+_L 0xDAAAAAAA 0x201000FF
+_C1 Error
+_L 0xDAAAAAAA 0x20100FFF
+_L 0xDAAAAAAA 0x211000FF
+_L 0xDAAAAAAA 0x201100FF
+_C0 LESS THAN: Execute the next code if the byte at address AAAAAAA is less than FF (otherwise, it is skipped)
+_L 0xDAAAAAAA 0x202000FF 
+_C1 Error
+_L 0xDAAAAAAA 0x20200FFF 
+_L 0xDAAAAAAA 0x212000FF 
+_L 0xDAAAAAAA 0x202100FF 
+_C0 GREATER THAN: Execute the next code if the byte at address AAAAAAA is greater than FF (otherwise, it is skipped)
+_L 0xDAAAAAAA 0x203000FF
+_C1 Error
+_L 0xDAAAAAAA 0x20300FFF
+_L 0xDAAAAAAA 0x213000FF
+_L 0xDAAAAAAA 0x203100FF
+
+_C0 EQUAL: Execute the next code if the halfword at address AAAAAAA equals FFFF (otherwise, it is skipped)
+_L 0xDAAAAAAA 0x0000FFFF 
+_C1 Error
+_L 0xDAAAAAAA 0x0100FFFF 
+_L 0xDAAAAAAA 0x0001FFFF 
+_C0 NOT EQUAL: Execute the next code if the halfword at address AAAAAAA does not equal FFFF (otherwise, it is skipped)
+_L 0xDAAAAAAA 0x0010FFFF
+_C1 Error
+_L 0xDAAAAAAA 0x0110FFFF
+_L 0xDAAAAAAA 0x0011FFFF
+_C0 LESS THAN: Execute the next code if the halfword at address AAAAAAA is less than FFFF (otherwise, it is skipped)
+_L 0xDAAAAAAA 0x0020FFFF 
+_C1 Error
+_L 0xDAAAAAAA 0x0120FFFF 
+_L 0xDAAAAAAA 0x0021FFFF 
+_C0 GREATER THAN: Execute the next code if the halfword at address AAAAAAA is greater than FFFF (otherwise, it is skipped) 
+_L 0xDAAAAAAA 0x0030FFFF
+_C1 Error
+_L 0xDAAAAAAA 0x0130FFFF
+_L 0xDAAAAAAA 0x0031FFFF
+
+_C1 Invalid sub-opcodes
+_L 0xDAAAAAAA 0x00400000
+_L 0xDAAAAAAA 0x00F00000
+_L 0xDAAAAAAA 0x20400000
+_L 0xDAAAAAAA 0x20F00000
+
+_G Comparison
+EQUAL: If the values at addresses AAAAAAA and BBBBBBB are equal, execute the next FF lines (otherwise, they are skipped) 
+_C0 EQUAL, 8 bit, Correct
+_L 0xDAAAAAAA 0x4BBBBBBB
+_L 0x000000FF 0x00000000 
+_C0 EQUAL, 16 bit, Correct
+_L 0xDAAAAAAA 0x4BBBBBBB
+_L 0x000000FF 0x00000001
+_C0 EQUAL, 32 bit, Correct
+_L 0xDAAAAAAA 0x4BBBBBBB
+_L 0x000000FF 0x00000002
+_C1 Error
+_L 0xDAAAAAAA 0x4BBBBBBB
+_L 0x00000FFF 0x00000000 
+_L 0xDAAAAAAA 0x4BBBBBBB
+_L 0x000000FF 0x00000003
+_L 0xDAAAAAAA 0x4BBBBBBB
+_L 0x000000FF 0x00000010
+
+NOT EQUAL: If the values at addresses AAAAAAA and BBBBBBB are not equal, execute the next NN lines (otherwise, they are skipped) 
+_C0 NOT EQUAL, 8 bit, Correct
+_L 0xDAAAAAAA 0x5BBBBBBB
+_L 0x000000FF 0x00000000
+_C0 NOT EQUAL, 16 bit, Correct
+_L 0xDAAAAAAA 0x5BBBBBBB
+_L 0x000000FF 0x00000001
+_C0 NOT EQUAL, 32 bit, Correct
+_L 0xDAAAAAAA 0x5BBBBBBB
+_L 0x000000FF 0x00000002
+_C1 Error
+_L 0xDAAAAAAA 0x5BBBBBBB
+_L 0x00000FFF 0x00000000 
+_L 0xDAAAAAAA 0x5BBBBBBB
+_L 0x000000FF 0x00000003
+_L 0xDAAAAAAA 0x5BBBBBBB
+_L 0x000000FF 0x00000010
+
+LESS THAN: If the value at address AAAAAAA is less than the value at address BBBBBBB, execute the next FF lines (otherwise, they are skipped) 
+_C0 LESS THAN, 8 bit, Correct
+_L 0xDAAAAAAA 0x6BBBBBBB
+_L 0x000000FF 0x00000000
+_C0 LESS THAN, 16 bit, Correct
+_L 0xDAAAAAAA 0x6BBBBBBB
+_L 0x000000FF 0x00000001
+_C0 LESS THAN, 32 bit, Correct
+_L 0xDAAAAAAA 0x6BBBBBBB
+_L 0x000000FF 0x00000002
+_C1 Error
+_L 0xDAAAAAAA 0x6BBBBBBB
+_L 0x00000FFF 0x00000000 
+_L 0xDAAAAAAA 0x6BBBBBBB
+_L 0x000000FF 0x00000003
+_L 0xDAAAAAAA 0x6BBBBBBB
+_L 0x000000FF 0x00000010
+
+GREATER THAN: If the value at address AAAAAAA is greater than the value at address BBBBBBB, execute the next NN lines (otherwise, they are skipped)
+_C0 GREATER THAN, 8 bit, Correct
+_L 0xDAAAAAAA 0x7BBBBBBB
+_L 0x000000FF 0x00000000
+_C0 GREATER THAN, 16 bit, Correct
+_L 0xDAAAAAAA 0x7BBBBBBB
+_L 0x000000FF 0x00000001
+_C0 GREATER THAN, 32 bit, Correct
+_L 0xDAAAAAAA 0x7BBBBBBB
+_L 0x000000FF 0x00000002
+_C1 Error
+_L 0xDAAAAAAA 0x7BBBBBBB
+_L 0x00000FFF 0x00000000 
+_L 0xDAAAAAAA 0x7BBBBBBB
+_L 0x000000FF 0x00000003
+_L 0xDAAAAAAA 0x7BBBBBBB
+_L 0x000000FF 0x00000010
+
+_C1 Invalid sub-opcodes
+_L 0xDAAAAAAA 0x10000000
+_L 0xDAAAAAAA 0x30000000
+_L 0xDAAAAAAA 0x80000000
+_L 0xDAAAAAAA 0x90000000
+_L 0xDAAAAAAA 0xA0000000
+_L 0xDAAAAAAA 0xF0000000
+
+_S ULUS-0000E
+_G Conditionals (Multiple Skip)
+_C0 EQUAL: Execute the next CC lines if the byte at address AAAAAAA equals FF (otherwise, it is skipped)
+_L 0xE1CC00FF 0x0AAAAAAA
+_C0 NOT EQUAL: Execute the next CC lines if the byte at address AAAAAAA does not equal FF (otherwise, they are skipped)
+_L 0xE1CC00FF 0x1AAAAAAA
+_C0 LESS THAN: Execute the next CC lines if the byte at address AAAAAAA is less than FF (otherwise, they are skipped)
+_L 0xE1CC00FF 0x2AAAAAAA
+_C0 GREATER THAN: Execute the next CC lines if the byte at address AAAAAAA is greater than FF (otherwise, they are skipped)
+_L 0xE1CC00FF 0x3AAAAAAA
+_C1 Error
+_L 0xE1CC0FFF 0x0AAAAAAA
+_L 0xE1CC00FF 0x1AAAAAAA
+
+_C0 EQUAL: Execute the next CC lines if the halfword at address AAAAAAA equals FFFF (otherwise, they are skipped)
+_L 0xE0CCFFFF 0x0AAAAAAA
+_C0 NOT EQUAL: Execute the next CC lines if the halfword at address AAAAAAA does not equal FFFF (otherwise, they are skipped)
+_L 0xE0CCFFFF 0x1AAAAAAA
+_C0 LESS THAN: Execute the next CC lines if the halfword at address AAAAAAA is less than FFFF (otherwise, they are skipped)
+_L 0xE0CCFFFF 0x2AAAAAAA
+_C0 GREATER THAN: Execute the next code if the halfword at address AAAAAAA is greater than FFFF (otherwise, they are skipped) 
+_L 0xE0CCFFFF 0x3AAAAAAA 
+_C1 Error
+_L 0xE0CCFFFF 0x1AAAAAAA
+
+_C1 Invalid sub-opcodes
+_L 0xE2000000 0x00000000
+_L 0xEF000000 0x00000000
+
+_S ULUS-0000F
+_G Invalid opcode
+_C1 Error
+_L 0xF0000000 0x00000000
