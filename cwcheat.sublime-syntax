@@ -1,0 +1,97 @@
+%YAML 1.2
+---
+name: cwcheat
+file_extensions:
+  - db
+scope: source.cwcheat
+
+contexts:
+  main:
+    - match: ^(_S) (.+)$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: meta.namespace.cwcheat string.unquoted.cwcheat
+    - match: ^(_G) (.+)$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: meta.annotation.cwcheat markup.heading.cwcheat
+    - match: ^(_C)([0-1]) (.+)$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: storage.modifier.cwcheat # 0 = disabled, 1 = enabled
+        3: meta.tag.cwcheat entity.name.function.cwcheat
+    # 8-bit constant
+    - match: ^(_L)\s+(0x(0)[0-9a-fA-F]+)\s+(0x0*[0-9a-fA-F]{2})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # 16-bit constant
+    - match: ^(_L)\s+(0x(1)[0-9a-fA-F]+)\s+(0x0*[0-9a-fA-F]{4})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # 32-bit constant
+    - match: ^(_L)\s+(0x(2)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # increment/decrement
+    - match: ^(_L)\s+(0x(3)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # multi-write
+    - match: ^(_L)\s+(0x([48])[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # pointer
+    - match: ^(_L)\s+(0x(6)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # boolean
+    - match: ^(_L)\s+(0x(7)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    # conditionals
+    - match: ^(_L)\s+(0x([deDE])[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    - match: ^(_L)\s+(0x([589abcfABCF])[0-9a-fA-F]+)\s+((0x)[0-9a-fA-F]+)\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        #3: invalid.illegal.cwcheat storage.type.cwcheat
+        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+
+    # illegal patterns
+    - match: ^(_L)\s+(0x([0-9a-fA-F]|([^0-9a-fA-F]))+)\s+((0x)([0-9a-fA-F]|([^0-9a-fA-F]))+)\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        4: invalid.illegal.cwcheat
+        5: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+        8: invalid.illegal.cwcheat
+    - match: ^(_L)\s*(.+)\s*$
+      captures:
+        1: keyword.declaration.cwcheat
+        2: invalid.illegal.cwcheat
