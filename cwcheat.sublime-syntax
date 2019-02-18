@@ -35,7 +35,7 @@ contexts:
       captures:
         1: keyword.other.cheat.cwcheat
         2: storage.modifier.state.cwcheat
-        3: string.unquoted.cwcheat
+        3: entity.name.section.cwcheat
 
   line:
     - match: (?i)^(_L)\b\s*
