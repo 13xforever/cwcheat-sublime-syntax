@@ -1,0 +1,108 @@
+; SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
+; see https://datacrystal.romhacking.net/wiki/CwCheat#Multi-Write_.280x4.2C_0x8.29
+
+_S ULUS-10551 #Specify the serial number of a game. cwCheat on PSP uses this to know which cheats you have installed apply to the game you're running.
+_G YS Seven US #Specify the name of the game. This is for us humans, cwCheat doesn't use it.
+_C0 / _C1 #Specify the start of a cheat micro-program. C0 is disable on game load, C1 is enabled on game load.
+_L 0xXXXXXXXX 0xXXXXXXXX #This is how you write a line of cheats. If you leave off the _L at the beginning, the line will become a comment, ignored by cwCheat. 
+
+_S ULUS-99999
+_G General states
+_C0 Disabled cheat
+_L 0x00000000 0x00000000
+_C1 Enabled cheat
+_L 0x00000001 0x00000000
+
+_S ULUS-00000
+_G Constant Write, 8 bit
+_C0 Correct
+_L 0x00000000 0x00000000
+_L 0x00000000 0x0000000f
+_L 0x00000000 0x000000f0
+_C1 Error
+_L 0x00000000 0x00000f00
+_L 0x00000000 0xf0000000
+
+_S ULUS-00001
+_G Constant Write, 16 bit
+_C0 Correct
+_L 0x10000000 0x00000000
+_L 0x10000000 0x0000000f
+_L 0x10000000 0x0000f000
+_C1 Error
+_L 0x00000000 0x000f0000
+_L 0x00000000 0xf0000000
+
+_S ULUS-00002
+_G Constant Write, 32 bit
+_C0 Correct
+_L 0x20000000 0x00000000
+_L 0x20000000 0x0000000f
+_L 0x20000000 0x0000f000
+_L 0x20000000 0xf0000000
+
+_S ULUS-00003
+_G Increment/decrement
+_C0 Continuously add FF to the byte at address AAAAAAA
+_L 0x301000FF 0x0AAAAAAA
+_C1 Error
+_L 0x30100FFF 0x0AAAAAAA
+_L 0x3F1000FF 0x0AAAAAAA
+_L 0x301000FF 0xFAAAAAAA
+
+_C0 Continuously subtract FF from the byte at address AAAAAAA
+_L 0x302000FF 0x0AAAAAAA
+_C1 Error
+_L 0x30200FFF 0x0AAAAAAA
+_L 0x3F2000FF 0x0AAAAAAA
+_L 0x302000FF 0xFAAAAAAA
+
+_C0 Continuously add FFFF to the halfword at address AAAAAAA
+_L 0x3030FFFF 0x0AAAAAAA
+_C1 Error
+_L 0x303FFFFF 0x0AAAAAAA
+_L 0x3F30FFFF 0x0AAAAAAA
+_L 0x3030FFFF 0xFAAAAAAA
+
+_C0 Continuously subtract FFFF from the halfword at address AAAAAAA
+_L 0x3040FFFF 0x0AAAAAAA
+_C1 Error
+_L 0x304FFFFF 0x0AAAAAAA
+_L 0x3F40FFFF 0x0AAAAAAA
+_L 0x3040FFFF 0xFAAAAAAA
+
+_C0 Continuously add FFFFFFFF to the word at address AAAAAAA
+_L 0x30500000 0x0AAAAAAA
+_L 0xFFFFFFFF 0x00000000
+_C1 Error
+_L 0x3050000F 0x0AAAAAAA
+_L 0xFFFFFFFF 0x00000000
+_L 0x3F500000 0x0AAAAAAA
+_L 0xFFFFFFFF 0x00000000
+_L 0x30500000 0xFAAAAAAA
+_L 0xFFFFFFFF 0x00000000
+
+_C0 Continuously subtract FFFFFFFF from the word at address AAAAAAA
+_L 0x30600000 0x0AAAAAAA
+_L 0xFFFFFFFF 0x00000000
+_C1 Error
+_L 0x3060000F 0x0AAAAAAA
+_L 0xFFFFFFFF 0x00000000
+_L 0x3F600000 0x0AAAAAAA
+_L 0xFFFFFFFF 0x00000000
+_L 0x30600000 0xFAAAAAAA
+_L 0xFFFFFFFF 0x00000000
+
+_C1 Invalid sub-opcodes
+_L 0x30700000 0x0AAAAAAA
+_L 0x30800000 0x0AAAAAAA
+_L 0x30900000 0x0AAAAAAA
+_L 0x30a00000 0x0AAAAAAA
+_L 0x30b00000 0x0AAAAAAA
+_L 0x30c00000 0x0AAAAAAA
+_L 0x30d00000 0x0AAAAAAA
+_L 0x30e00000 0x0AAAAAAA
+_L 0x30f00000 0x0AAAAAAA
+
+_S ULUS-00004
+_G Multi-Write
