@@ -1,5 +1,5 @@
-; SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
-; see https://datacrystal.romhacking.net/wiki/CwCheat#Multi-Write_.280x4.2C_0x8.29
+SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
+see https://datacrystal.romhacking.net/wiki/CwCheat
 
 _S ULUS-10551 #Specify the serial number of a game. cwCheat on PSP uses this to know which cheats you have installed apply to the game you're running.
 _G YS Seven US #Specify the name of the game. This is for us humans, cwCheat doesn't use it.
