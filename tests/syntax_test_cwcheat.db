@@ -1,8 +1,23 @@
-SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
+; SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
+
 see https://datacrystal.romhacking.net/wiki/CwCheat
 
+_L before _C
+; <- invalid
+_C0 before _G
+; <- invalid
+_G before _S
+; <- invalid
+
 _S Game ID that is used to match the section
+; <- meta.namespace - invalid
+; <- keyword.other.serial
+;^   keyword.other.serial
+;  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ entity.name.namespace
+;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - invalid
 _G User-friendly game name
+; <- keyword.other.game
+;^ keyword.other.game
 _C0 Disabled cheat title
 _L 0x00000000 0x00000000
 _C1 Enabled cheat title
@@ -10,7 +25,13 @@ _L 0x00000001 0x00000000
 _C2 Invalid cheat state
 _C1 There should be at least one opcode inside
 everything else is a comment
+; <- comment.line - invalid
+;^^^^^^^^^^^^^^^^^^^^^^^^^^^ comment.line - invalid
 _s register shouldn't matter
+; <- keyword.other.serial
+;^   keyword.other.serial
+;  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ entity.name.namespace
+;^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ - invalid
 _g for any
 _c0 command
 
@@ -32,8 +53,8 @@ _L 0x10000000 0x00000000
 _L 0x10000000 0x0000000f
 _L 0x10000000 0x0000f000
 _C1 Error
-_L 0x00000000 0x000f0000
-_L 0x00000000 0xf0000000
+_L 0x10000000 0x000f0000
+_L 0x10000000 0xf0000000
 
 _S ULUS-00002
 _G Constant Write, 32 bit
@@ -439,7 +460,7 @@ _C0 GREATER THAN: Execute the next CC lines if the byte at address AAAAAAA is gr
 _L 0xE1CC00FF 0x3AAAAAAA
 _C1 Error
 _L 0xE1CC0FFF 0x0AAAAAAA
-_L 0xE1CC00FF 0x1AAAAAAA
+_L 0xE1CC00FF 0x4AAAAAAA
 
 _C0 EQUAL: Execute the next CC lines if the halfword at address AAAAAAA equals FFFF (otherwise, they are skipped)
 _L 0xE0CCFFFF 0x0AAAAAAA

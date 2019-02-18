@@ -7,91 +7,368 @@ scope: source.cwcheat
 
 contexts:
   main:
-    - match: ^(_S) (.+)$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: meta.namespace.cwcheat string.unquoted.cwcheat
-    - match: ^(_G) (.+)$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: meta.annotation.cwcheat markup.heading.cwcheat
-    - match: ^(_C)([0-1]) (.+)$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: storage.modifier.cwcheat # 0 = disabled, 1 = enabled
-        3: meta.tag.cwcheat entity.name.function.cwcheat
-    # 8-bit constant
-    - match: ^(_L)\s+(0x(0)[0-9a-fA-F]+)\s+(0x0*[0-9a-fA-F]{2})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # 16-bit constant
-    - match: ^(_L)\s+(0x(1)[0-9a-fA-F]+)\s+(0x0*[0-9a-fA-F]{4})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # 32-bit constant
-    - match: ^(_L)\s+(0x(2)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # increment/decrement
-    - match: ^(_L)\s+(0x(3)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # multi-write
-    - match: ^(_L)\s+(0x([48])[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # pointer
-    - match: ^(_L)\s+(0x(6)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # boolean
-    - match: ^(_L)\s+(0x(7)[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    # conditionals
-    - match: ^(_L)\s+(0x([deDE])[0-9a-fA-F]+)\s+(0x[0-9a-fA-F]{8})\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        3: storage.type.cwcheat # 0 = 8 bit, 1 = 16 bit, 2 = 32 bit
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-    - match: ^(_L)\s+(0x([589abcfABCF])[0-9a-fA-F]+)\s+((0x)[0-9a-fA-F]+)\s*$
-      captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
-        #3: invalid.illegal.cwcheat storage.type.cwcheat
-        4: constant.numeric.hex.cwcheat variable.parameter.cwcheat
+    - include: serial
+    - include: game
+    - include: cheat
+    - include: line
+    - include: comment
+    - include: invalid_all
 
-    # illegal patterns
-    - match: ^(_L)\s+(0x([0-9a-fA-F]|([^0-9a-fA-F]))+)\s+((0x)([0-9a-fA-F]|([^0-9a-fA-F]))+)\s*$
+  comment:
+    - match: (?i)^(?!_([SGCL])).*
+      scope: comment.line.cwcheat
+
+  serial:
+    - match: (?i)^(_S) (.+)
       captures:
-        1: keyword.declaration.cwcheat
-        2: entity.name.label.cwcheat constant.numeric.hex.cwcheat
+        1: keyword.other.serial.cwcheat
+        2: entity.name.namespace.cwcheat
+
+  game:
+    - match: (?i)^(_G) (.+)
+      captures:
+        1: keyword.other.game.cwcheat
+        2: string.unquoted.cwcheat
+
+  cheat:
+    - match: (?i)^(_C([01])) (.+)
+      captures:
+        1: keyword.other.cheat.cwcheat
+        2: storage.modifier.state.cwcheat
+        3: string.unquoted.cwcheat
+
+  line:
+    - match: (?i)^(_L)\b\s*
+      scope: keyword.other.line.cwcheat
+      push: opcodes
+
+  line2:
+    - match: (?i)^(_L)\b\s*
+      scope: keyword.other.line.cwcheat
+      pop: true
+    - include: comment
+    - include: invalid_all
+
+  opcodes:
+    # constant writes
+    - match: (?i)(0x(0)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.assignment.cwcheat
+        3: entity.name.label.cwcheat
+      set: operand_8bit
+    - match: (?i)(0x(1)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.assignment.cwcheat
+        3: entity.name.label.cwcheat
+      set: operand_16bit
+    - match: (?i)(0x(2)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.assignment.cwcheat
+        3: entity.name.label.cwcheat
+      set: operand_32bit
+    # increment/decrement
+    - match: (?i)(0x(3))
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.arithmetic.cwcheat
+      set: op_increment
+    # multi-write
+    - match: (?i)(0x(4)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.assignment.cwcheat
+        3: entity.name.label.cwcheat
+      set: [operand_32bit, operand_32bit, line2, op_fma_offset]
+    - match: (?i)(0x(8)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.assignment.cwcheat
+        3: entity.name.label.cwcheat
+      set: [op_fma_argument, line2, op_fma_offset]
+    # pointer add
+    - match: (?i)(0x(6)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.arithmetic.cwcheat
+        3: entity.name.label.cwcheat
+      set: [operand_address, op_pointer_add, line2, operand_32bit]
+    # booldean
+    - match: (?i)(0x(7)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.bitwise.cwcheat
+        3: entity.name.label.cwcheat
+      set: op_bitwise
+    # conditions
+    - match: (?i)(0x(d)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.logical.cwcheat
+        3: entity.name.label.cwcheat
+      set: op_condition
+    - match: (?i)(0x(e))
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.logical.cwcheat
+      set: op_condition_multiline
+    - match: (?i)(0x([589abcf])[0-9a-f]{7})
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: invalid.illegal.opcode.cwcheat
+      pop: true
+    - include: comment
+    - include: invalid_all
+
+  op_increment:
+    - match: '0'
+      scope: constant.numeric.hex.cwcheat
+      set: op_increment_type
+    - match: .
+      scope: invalid.illegal.cwcheat
+      set: op_increment_type
+  op_increment_type:
+    - match: (?i)(([12])000([0-9a-f]{2})|([34])0([0-9a-f]{4}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        3: constant.other.cwcheat
+        4: storage.type.cwcheat
+        5: constant.other.cwcheat
+      set: operand_address
+    - match: (?i)(([56])(0{5}|([0-9a-f]{5})))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
         4: invalid.illegal.cwcheat
-        5: constant.numeric.hex.cwcheat variable.parameter.cwcheat
-        8: invalid.illegal.cwcheat
-    - match: ^(_L)\s*(.+)\s*$
+      set: [operand_const_0, operand_32bit, line2, operand_address]
+    - match: (?i)([0-9a-f]{6})\b\s*
       captures:
-        1: keyword.declaration.cwcheat
+        1: invalid.illegal.cwcheat
+      set: operand_address
+
+  op_fma_offset:
+    - match: (?i)(0x([0-9a-f]{4})([0-9a-f]{4}))\b\s+
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: variable.parameter.cwcheat
+        3: constant.other.offset.cwcheat
+      pop: true
+  op_fma_argument:
+    - match: (?i)(0x(0)0{5}([0-9a-f]{2}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        3: constant.other.cwcheat
+      set: operand_8bit
+    - match: (?i)(0x(1)0{3}([0-9a-f]{4}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        3: constant.other.cwcheat
+      set: operand_16bit
+    - match: (?i)(0x([01])([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        3: invalid.illegal.cwcheat
+      pop: true
+    - match: (?i)(0x([0-9a-f]{8}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
         2: invalid.illegal.cwcheat
+      pop: true
+
+  op_pointer_add:
+    - match: (?i)(0x0{3}([0-5])0{3}1)
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.cwcheat
+      pop: true
+
+  op_bitwise:
+    - match: (?i)(0x0{3})
+      scope: constant.numeric.hex.cwcheat
+      set: op_bitwise_type
+    - match: \w{3}
+      scope: invalid.illegal.cwcheat
+      set: op_bitwise_type
+  op_bitwise_type:
+    - match: '[012]'
+      scope: constant.numeric.hex.cwcheat storage.type.cwcheat
+      set: op_bitwise_value_8bit
+    - match: '[345]'
+      scope: constant.numeric.hex.cwcheat storage.type.cwcheat
+      set: op_bitwise_value_16bit
+    - match: \w
+      scope: invalid.illegal.cwcheat
+      set: op_bitwise_value_16bit
+  op_bitwise_value_8bit:
+    - match: (?i)(00([0-9a-f]{2}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: constant.other.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.cwcheat
+      pop: true
+  op_bitwise_value_16bit:
+    - match: (?i)([0-9a-f]{4})\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat constant.other.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.cwcheat
+      pop: true
+
+  op_condition:
+    - match: (?i)(0x(2)(0|(\w))(([0-3])|(\w))(0{3}|(\w{3}))([0-9a-f]{2}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        4: invalid.illegal.cwcheat
+        6: keyword.control.conditional.cwcheat
+        7: invalid.illegal.cwcheat
+        9: invalid.illegal.cwcheat
+        10: constant.other.cwcheat
+      pop: true
+    - match: (?i)(0x(0)(0|(\w))(([0-3])|(\w))(0|(\w))([0-9a-f]{4}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        4: invalid.illegal.cwcheat
+        6: keyword.control.conditional.cwcheat
+        7: invalid.illegal.cwcheat
+        9: invalid.illegal.cwcheat
+        10: constant.other.cwcheat
+      pop: true
+    - match: (?i)(0x([4-7])([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.control.conditional.cwcheat
+        3: entity.name.label.cwcheat
+      set: [op_condition_comparison_type, op_condition_skip, line2]
+    - match: (?i)(0x(\w)[0-9a-f]{7})\b\s
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: invalid.illegal.cwcheat
+      pop: true
+
+  op_condition_multiline:
+    - match: (?i)((0)([0-9a-f]{2})([0-9a-f]{4}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        3: constant.other.offset.cwcheat
+        4: constant.other.cwcheat
+      set: op_condition_type
+    - match: (?i)((1)([0-9a-f]{2})(00|(\w\w))([0-9a-f]{2}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: storage.type.cwcheat
+        3: constant.other.offset.cwcheat
+        5: invalid.illegal.cwcheat
+        6: constant.other.cwcheat
+      set: op_condition_type
+    - match: (?i)((\w)[0-9a-f]{6})\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: invalid.illegal.cwcheat
+      set: op_condition_type
+  op_condition_type:
+    - match: (?i)(0x(([0-3])|(\w))([0-9a-f]{7}))
+      captures:
+        1: constant.numeric.hex.cwcheat
+        3: keyword.operator.logical.cwcheat
+        4: invalid.illegal.cwcheat
+        5: entity.name.label.cwcheat
+      pop: true
+  op_condition_skip:
+    - match: (?i)(0x(0{6}|(\w{6}))([0-9a-f]{2}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        3: invalid.illegal.cwcheat
+        4: constant.other.offset.cwcheat
+      pop: true
+  op_condition_comparison_type:
+    - match: (?i)(0x(0{7}|(\w{7}))(([0-2])|(\w)))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        3: invalid.illegal.cwcheat
+        5: storage.type.cwcheat
+        6: invalid.illegal.cwcheat
+      pop: true
+
+  operand_8bit:
+    - match: (?i)(0x0{6}([0-9a-f]{2}))\b
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: constant.other.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.operand.cwcheat
+      pop: true
+  operand_16bit:
+    - match: (?i)(0x0{4}([0-9a-f]{4}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: constant.other.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.operand.cwcheat
+      pop: true
+  operand_32bit:
+    - match: (?i)(0x([0-9a-f]{8}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: constant.other.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.operand.cwcheat
+      pop: true
+  operand_address:
+    - match: (?i)(0x0([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: entity.name.label.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.operand.cwcheat
+      pop: true
+  operand_const_0:
+    - match: (?i)(0x0{8})\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+      pop: true
+    - match: \w+
+      scope: invalid.illegal.operand.cwcheat
+      pop: true
+
+  invalid_all:
+    - match: (?i)^_[SGCL].*
+      scope: invalid.illegal.cwcheat
+      pop: true
+  invalid_serial:
+    - match: (?i)^_S.*
+      scope: invalid.illegal.serial.cwcheat
+  invalid_game:
+    - match: (?i)^_G.*
+      scope: invalid.illegal.game.cwcheat
+  invalid_cheat:
+    - match: (?i)^_C.*
+      scope: invalid.illegal.cheat.cwcheat
+  invalid_line:
+    - match: (?i)^_L.*
+      scope: invalid.illegal.line.cwcheat
+
+  reset_serial:
+    - match: (?i)(?!^_S)
+      set: serial
+  reset_cheat:
+    - match: (?i)(?!^_C)
+      set: cheat
