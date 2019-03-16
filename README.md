@@ -1,3 +1,11 @@
-# cwcheat syntax highlighter
+# CwCheat Syntax Highlighter for **PSP**
+
 This is a CWCheat syntax highlighter for Sublime Text 3.
-Currently it only highlights general syntax, with not much error checking.
+
+The syntax highlighter will try to mark various parts of the commands and arguments.
+
+Currently support is implemented for all the types documented in [this CwCheat wiki](https://datacrystal.romhacking.net/wiki/CwCheat) plus some additional commands.
+
+Not all commands are supported, some commands are impossible to check with the syntax highlighter alone.
+
+![Example screenshot](cwcheat_screenshot.png)
