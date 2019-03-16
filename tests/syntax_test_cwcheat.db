@@ -1,4 +1,4 @@
-; SYNTAX TEST "Packages/cwcheat/cwcheat.sublime-syntax"
+; SYNTAX TEST "Packages/User/cwcheat-sublime-syntax/cwcheat.sublime-syntax"
 
 see https://datacrystal.romhacking.net/wiki/CwCheat
 
@@ -161,9 +161,13 @@ _L 0x4AAAAAAA 0xBBBBCCCC
 _L 0xFFFFFFFF 0xEEEEEEEE
 
 _S ULUS-00005
-_G Invalid opcode
+_G Copy bytes
+AAAAAAA = destination address
+BBBBBBB = source address
+FF = number of bytes?
 _C1 Error
-_L 0x50000000 0x00000000
+_L 0x5AAAAAAA 0x00000002
+_L 0x0BBBBBBB 0x00000000
 
 _S ULUS-00006
 _G Pointer Commands

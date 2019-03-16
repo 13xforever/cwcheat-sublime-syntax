@@ -88,6 +88,13 @@ contexts:
         2: keyword.operator.assignment.cwcheat
         3: entity.name.label.cwcheat
       set: [op_fma_argument, line2, op_fma_offset]
+    # memory copy
+    - match: (?i)(0x(5)([0-9a-f]{7}))\b\s*
+      captures:
+        1: constant.numeric.hex.cwcheat
+        2: keyword.operator.memory-copy.cwcheat
+        3: entity.name.label.cwcheat
+      set: [operand_const_0, operand_address, line2, operand_8bit]
     # pointer add
     - match: (?i)(0x(6)([0-9a-f]{7}))\b\s*
       captures:
@@ -95,7 +102,7 @@ contexts:
         2: keyword.operator.arithmetic.cwcheat
         3: entity.name.label.cwcheat
       set: [operand_address, op_pointer_add, line2, operand_32bit]
-    # booldean
+    # boolean
     - match: (?i)(0x(7)([0-9a-f]{7}))\b\s*
       captures:
         1: constant.numeric.hex.cwcheat
@@ -114,7 +121,7 @@ contexts:
         1: constant.numeric.hex.cwcheat
         2: keyword.operator.logical.cwcheat
       set: op_condition_multiline
-    - match: (?i)(0x([589abcf])[0-9a-f]{7})
+    - match: (?i)(0x([9abcf])[0-9a-f]{7})
       captures:
         1: constant.numeric.hex.cwcheat
         2: invalid.illegal.opcode.cwcheat
