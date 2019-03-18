@@ -1,6 +1,6 @@
 %YAML 1.2
 ---
-name: cwcheat
+name: cwcheat for psp
 file_extensions:
   - db
 scope: source.cwcheat
